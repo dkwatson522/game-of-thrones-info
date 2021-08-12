@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import './index.css';
+import axios from 'axios';
+import Header from './components/ui/Header';
+import CharacterGrid from './components/characters/CharacterGrid'
+import { useState, useEffect } from 'react';
 
 function App() {
+  const [characters, setCharacters] = useState([]);
+
+  useEffect(() => {
+    const getCharacters = async () => {
+      const results = await axios(`https://www.anapioficeandfire.com/api/characters?pageSize=50`)
+
+      setCharacters(results.data)
+      console.log(results.data.filter(char => char.name !== ""))
+    }
+
+    getCharacters();
+  },[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="px-4 sm:px-6 lg:px-8">
+      <Header />
+      <CharacterGrid characters={characters}/>
     </div>
   );
 }
